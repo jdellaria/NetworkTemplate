@@ -1,0 +1,13 @@
+sudo gedit /etc/fstab
+
+/dev/sda1 		/4TBDrive 	ext4  	defaults 	0 	1
+/4TBDrive/RAID 		/RAID 		none  	defaults,bind 	0 	0
+/4TBDrive/Shared	/Shared 	none  	defaults,bind 	0 	0
+
+sudo mount --bind /2TBDrive/RAID /RAID
+sudo mount --bind /2TBDrive/Shared /Shared
+
+# 4 Terabyte Drive with RAID and Shared UUID=56b09519-3163-446f-84f5-7717434d9a65
+UUID=56b09519-3163-446f-84f5-7717434d9a65	/4TBDrive 	ext4  	defaults 	0 	1
+/4TBDrive/RAID 					/RAID 		none  	defaults,bind 	0 	0
+/4TBDrive/Shared				/Shared 	none  	defaults,bind 	0 	0
