@@ -95,12 +95,41 @@ typedef enum finishSongActions {
 	NETWORK_ACTION_WAIT,
 } NetworkActions;
 
+typedef enum applicationActions {
+	APPLICATION_ACTION_MANUAL = 0,
+	APPLICATION_ACTION_CONTINUOUS,
+} ApplicationActions;
+
+
+class ApplicationModes {
+public:
+	ApplicationModes();
+	virtual ~ApplicationModes();
+
+	void setPlayMode(playActions mode);
+	int getPlayMode();
+
+	void setNetworkMode(NetworkActions mode);
+	int getNetworkMode();
+
+	void setManual();
+	void setContinuous();
+	int getApplicationMode();
+
+	ApplicationActions applicationMode = APPLICATION_ACTION_MANUAL;
+	playActions playMode = PLAY_ACTION_PLAY;
+	NetworkActions networkMode = NETWORK_ACTION_DISCONNECT;
+
+};
+
+
 playActions playMode = PLAY_ACTION_PLAY;
 playActions exitMode = PLAY_ACTION_PLAY;
 NetworkActions networkMode = NETWORK_ACTION_DISCONNECT;
 
 configurationFile myConfig;
 
+ApplicationModes myAppModes;
 
 UDPServer dataGramServer;
 
@@ -185,14 +214,16 @@ int main(int argc, char* const argv[])
 
 	while (exitMode != PLAY_ACTION_EXIT)
 	{
-		playMode = PLAY_ACTION_PLAY;
-		networkMode = NETWORK_ACTION_DISCONNECT;
+//		playMode = PLAY_ACTION_PLAY;
+		myAppModes.setPlayMode (PLAY_ACTION_PLAY);
+		myAppModes.setNetworkMode(NETWORK_ACTION_DISCONNECT);
+//		networkMode = NETWORK_ACTION_DISCONNECT;
 		message = "airportAddress is: ";
 		message.append(myConfig.airportAddress + "\n");
 		myLog.print(logWarning, message);
 
 
-		while (playMode != PLAY_ACTION_QUIT)
+		while (myAppModes.getPlayMode() != PLAY_ACTION_QUIT)
 		{
 			message = __func__;
 			message.append(": Wile Loop - ");
@@ -281,6 +312,7 @@ int eventHandler()
 		if(strstr(buffer,"quit") != NULL )
 		{
 			playMode = PLAY_ACTION_QUIT;
+			myAppModes.setPlayMode (PLAY_ACTION_QUIT);
 			message = __func__;
 			message.append(": Play Quit Signal Received");
 			myLog.print(logWarning, message);
@@ -288,6 +320,7 @@ int eventHandler()
 		else if(strstr(buffer,"pause") != NULL )
 		{
 			playMode = PLAY_ACTION_PAUSE;
+			myAppModes.setPlayMode (PLAY_ACTION_PAUSE);
 			message = __func__;
 			message.append(": Play Pause Signal Received");
 			myLog.print(logWarning, message);
@@ -296,7 +329,10 @@ int eventHandler()
 		{
 
 			networkMode = NETWORK_ACTION_CONNECT;
+			myAppModes.setNetworkMode (NETWORK_ACTION_CONNECT);
+
 			playMode = PLAY_ACTION_PLAY;
+			myAppModes.setPlayMode (PLAY_ACTION_PLAY);
 			message = __func__;
 			message.append(": Play Automatic Signal Received");
 			myLog.print(logWarning, message);
@@ -311,6 +347,7 @@ int eventHandler()
 		else if(strstr(buffer,"stop") != NULL )
 		{
 			playMode = PLAY_ACTION_STOP;
+			myAppModes.setPlayMode (PLAY_ACTION_STOP);
 			message = __func__;
 			message.append(": Play Stop Signal Received");
 			myLog.print(logWarning, message);
@@ -318,7 +355,10 @@ int eventHandler()
 		else if(strstr(buffer,"play") != NULL )
 		{
 			playMode = PLAY_ACTION_PLAY;
+			myAppModes.setPlayMode (PLAY_ACTION_PLAY);
 			networkMode = NETWORK_ACTION_CONNECT;
+			myAppModes.setNetworkMode (NETWORK_ACTION_CONNECT);
+
 			message = __func__;
 			message.append(": Play Play Signal Received");
 			myLog.print(logWarning, message);
@@ -326,6 +366,7 @@ int eventHandler()
 		else if(strstr(buffer,"exit") != NULL )
 		{
 			playMode = PLAY_ACTION_QUIT;
+			myAppModes.setPlayMode (PLAY_ACTION_QUIT);
 			exitMode = PLAY_ACTION_EXIT;
 
 			message = __func__;
@@ -345,6 +386,7 @@ int eventHandler()
 		else if(strstr(buffer,"nextalbum") != NULL )
 		{
 			playMode = PLAY_ACTION_NEXTALBUM;
+			myAppModes.setPlayMode (PLAY_ACTION_NEXTALBUM);
 
 			message = __func__;
 			message.append(": Next Album Signal Received");
@@ -353,6 +395,7 @@ int eventHandler()
 		else if(strstr(buffer,"nextsong") != NULL ) // next is for going to the next song via the web site... without finishing the song.
 		{
 			playMode = PLAY_ACTION_NEXTSONG;
+			myAppModes.setPlayMode (PLAY_ACTION_NEXTSONG);
 			returnValue = PLAY_ACTION_NEXTSONG;
 
 			message = __func__;
@@ -362,6 +405,7 @@ int eventHandler()
 		else if(strstr(buffer,"next") != NULL )// next is for going to the next song naturally.
 		{
 			playMode = PLAY_ACTION_NEXTSONG;
+			myAppModes.setPlayMode (PLAY_ACTION_NEXTSONG);
 			returnValue = PLAY_ACTION_NEXTSONG;
 			message = __func__;
 			message.append(": Next (Song) Signal Received");
@@ -378,7 +422,42 @@ int eventHandler()
 	return (returnValue);
 }
 
+ApplicationModes::ApplicationModes() {
+	// TODO Auto-generated constructor stub
+
+}
+
+ApplicationModes::~ApplicationModes() {
+	// TODO Auto-generated destructor stub
+}
+
+void ApplicationModes::setPlayMode(playActions mode) {
+	playMode = mode;
+}
+
+int ApplicationModes::getPlayMode() {
+	return(playMode);
+}
 
 
+void ApplicationModes::setNetworkMode(NetworkActions mode) {
+	networkMode = mode;
+}
+
+int ApplicationModes::getNetworkMode() {
+	return(networkMode);
+}
 
 
+void ApplicationModes::setManual() {
+	applicationMode = APPLICATION_ACTION_MANUAL;
+}
+
+void ApplicationModes::setContinuous() {
+	applicationMode = APPLICATION_ACTION_CONTINUOUS;
+}
+
+
+int ApplicationModes::getApplicationMode() {
+	return(applicationMode);
+}

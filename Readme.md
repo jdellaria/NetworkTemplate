@@ -42,3 +42,19 @@ Library search path:
 /usr/lib/mysql
 "${workspace_loc:/DLiriumLib/Release}"
 /usr/local/ssl/lib
+
+
+USEFUL GIT COMMANDS git diff @{upstream}
+
+git init
+
+git add NAME_OF_FILE 
+
+
+git add .     -> to add all new files and changes git status
+
+git commit -a -m "First Commit"
+
+git remote add origin https://github.com/jdellaria/NetworkTemplate.git
+
+git push -u origin master
