@@ -2,7 +2,7 @@
 <!-- Configuration Parmeters -->
 <airportAddress>192.168.19.4</airportAddress>
 <logfilename>/home/jdellaria/Desktop/logAirportTalk.txt</logfilename>
-<logvalue>logDebug</logvalue>
+<logvalue>logWarning</logvalue>
 <logprintscreen>true</logprintscreen>
 <logprintfile>true</logprintfile>
 <logprinttime>true</logprinttime>
